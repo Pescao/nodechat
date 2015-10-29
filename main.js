@@ -49,9 +49,18 @@ Application.prototype = {
         });
         socket.on('chat message', function (data) {
             self.addMessage(data);
-            self.onNewMessage();
+            scrollToBottom();
         });
 
+        $(window).blur(function (e) {
+            socket.on('chat message', self.onNewMessage.bind(self));
+            $(window).on('focus', function (e) {
+                $(window).off('focus');
+                $('title').text('Чятик');
+                socket.off('chat message', self.onNewMessage.bind(self));
+            });
+
+        });
         $(window).focus(function (e) {
             $('title').text('Чятик')
         });
@@ -68,7 +77,7 @@ Application.prototype = {
         var self = this;
         $('title').text('Чятик (новое сообщение)');
         self.notificationSound.play();
-        scrollToBottom();
+
     },
     setNickname: function () {
         var self = this, $ui = self.$ui,

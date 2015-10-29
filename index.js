@@ -9,7 +9,6 @@ function getIndex(request, response) {
 }
 app.get('/', getIndex);
 app.get('/index.html', getIndex);
-
 app.get('/main.js', function (req, res) {
     res.sendFile(__dirname + '/main.js');
 });
@@ -19,21 +18,11 @@ app.get('/main.css', function (req, res) {
 app.get('/assets/audio/notification.mp3', function (req, res) {
     res.sendFile(__dirname + '/assets/audio/notification.mp3');
 });
-
-
 app.get('/getHistory', function (req, res) {
     MsgHistory.get().then(function (content) {
         res.send(JSON.stringify(content));
     });
 });
-
-io.on('connection', function (socket) {
-    socket.on('chat message', function (msg) {
-        MsgHistory.save(msg);
-        io.emit('chat message', msg);
-    });
-});
-
 app.get('/updateFromRepo', function (req, res) {
     console.log('updating from repo');
     var pull = child_process.spawn('git', ['pull']);
@@ -47,6 +36,12 @@ app.get('/updateFromRepo', function (req, res) {
     res.send('updated');
 });
 
+io.on('connection', function (socket) {
+    socket.on('chat message', function (msg) {
+        MsgHistory.save(msg);
+        io.emit('chat message', msg);
+    });
+});
 http.listen(9090, function () {
     console.log('listening on *:3000');
 });

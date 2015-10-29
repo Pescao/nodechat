@@ -68,6 +68,7 @@ Application.prototype = {
         }
     },
     getHistory: function () {
+        var self = this;
         $.when(self.calls.getHistory()).then(function (result) {
             var history;
             try {

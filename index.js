@@ -36,6 +36,7 @@ app.get('/updateFromRepo', function (req, res) {
         console.log('pull stderr: ' + data);
         output.stderr.push('pull stderr: ' + data);
     });
+    io.emit('code updated');
     res.send(JSON.stringify(output));
 });
 

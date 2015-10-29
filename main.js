@@ -53,6 +53,10 @@ Application.prototype = {
             $(document).trigger("chat.message");
         });
 
+        socket.on('code updated', function () {
+            location.reload();
+        });
+
         $(window).blur(function (e) {
             $(document).on("chat.message", self.onNewMessage.bind(self));
             $(window).on('focus', function (e) {

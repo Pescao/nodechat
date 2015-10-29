@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var MsgHistory = require('./history');
-var exec = require("child_process").exec;
+var child_process = require("child_process");
 
 function getIndex(request, response) {
     response.sendFile(__dirname + '/index.html');
@@ -33,8 +33,12 @@ io.on('connection', function (socket) {
 
 app.get('/updateFromRepo', function (req, res) {
     console.log('updating from repo');
-    exec('git fetch');
-    exec('git pull');
+    var pull = child_process.spawn('git pull');
+
+    pull.stdout.on('data', function (data) {
+        console.log('pull stdout: ' + data);
+    });
+    child_process.exec('git pull');
     res.send('updated');
 });
 

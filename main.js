@@ -12,6 +12,7 @@ Application.prototype = {
         name    : $("#name"),
         msg     : $("#m")
     },
+    notificationSound: new Audio('./assets/audio/notification.mp3'),
     calls: {
         getHistory: function () {
             return $.ajax({
@@ -48,8 +49,7 @@ Application.prototype = {
         });
         socket.on('chat message', function (data) {
             self.addMessage(data);
-            $('title').text('Чятик (новое сообщение)');
-            scrollToBottom();
+            self.onNewMessage();
         });
 
         $(window).focus(function (e) {
@@ -63,6 +63,12 @@ Application.prototype = {
             time = new Date(msg.time);
         }
         $ui.messages.append($('<li>').text('[' + time.toLocaleString() + '] ' + msg.name + ': ' + msg.text));
+    },
+    onNewMessage     : function () {
+        var self = this;
+        $('title').text('Чятик (новое сообщение)');
+        self.notificationSound.play();
+        scrollToBottom();
     },
     setNickname: function () {
         var self = this, $ui = self.$ui,

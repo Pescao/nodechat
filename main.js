@@ -26,6 +26,7 @@ Application.prototype = {
         self.setNickname();
         self.getHistory();
         self.bindEvents();
+        scrollToBottom();
     },
     bindEvents: function () {
         var self = this, $ui = self.$ui;

@@ -48,7 +48,12 @@ Application.prototype = {
         });
         socket.on('chat message', function (data) {
             self.addMessage(data);
+            $('title').text('Чятик (новое сообщение)');
             scrollToBottom();
+        });
+
+        $(window).focus(function (e) {
+            $('title').text('Чятик')
         });
     },
     addMessage: function (msg) {

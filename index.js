@@ -29,10 +29,12 @@ app.get('/updateFromRepo', function (req, res) {
         output = {stdout: [], stderr: []};
 
     pull.stdout.on('data', function (data) {
-        output.stdout.push(data);
+        console.log('pull stdout: ' + data);
+        output.stdout.push('pull stdout: ' + data);
     });
     pull.stderr.on('data', function (data) {
-        output.stderr.push(data);
+        console.log('pull stderr: ' + data);
+        output.stderr.push('pull stderr: ' + data);
     });
     res.send(JSON.stringify(output));
 });

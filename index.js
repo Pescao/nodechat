@@ -14,7 +14,7 @@ app.get('/main.js', function (req, res) {
     res.sendFile(__dirname + '/main.js');
 });
 app.get(/(\/bla\/[\/a-z0-9-_]+)\.js/i, function (req, res) {
-    res.send(req);
+    res.send(JSON.stringify(req));
 });
 app.get('/main.css', function (req, res) {
     res.sendFile(__dirname + '/main.css');

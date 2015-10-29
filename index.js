@@ -13,10 +13,13 @@ app.get('/index.html', getIndex);
 app.get('/main.js', function (req, res) {
     res.sendFile(__dirname + '/main.js');
 });
-
 app.get('/main.css', function (req, res) {
     res.sendFile(__dirname + '/main.css');
 });
+app.get('/assets/audio/notification.mp3', function (req, res) {
+    res.sendFile(__dirname + '/assets/audio/notification.mp3');
+});
+
 
 app.get('/getHistory', function (req, res) {
     MsgHistory.get().then(function (content) {

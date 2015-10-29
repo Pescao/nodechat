@@ -54,7 +54,8 @@ Application.prototype = {
         });
 
         socket.on('code updated', function () {
-            location.reload();
+            // not sure that we need it
+            //location.reload();
         });
 
         $(window).blur(function (e) {

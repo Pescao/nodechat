@@ -47,7 +47,8 @@ Application.prototype = {
             return false;
         });
         socket.on('chat message', function (data) {
-            app.addMessage(data);
+            self.addMessage(data);
+            $(window).scrollTop($('body').height());
         });
     },
     addMessage: function (msg) {

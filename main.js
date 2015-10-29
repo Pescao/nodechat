@@ -50,15 +50,15 @@ Application.prototype = {
         socket.on('chat message', function (data) {
             self.addMessage(data);
             scrollToBottom();
-            $('document').trigger('new:message');
+            $(document).trigger("chat.message");
         });
 
         $(window).blur(function (e) {
-            $(document).on('new:message', self.onNewMessage.bind(self));
+            $(document).on("chat.message", self.onNewMessage.bind(self));
             $(window).on('focus', function (e) {
-                $(window).off('focus');
                 $('title').text('Чятик');
-                $(document).off('new:message');
+                $(window).off('focus');
+                $(document).off("chat.message");
             });
         });
     },

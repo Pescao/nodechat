@@ -7,9 +7,15 @@
 <body>
 <ul id="messages"></ul>
 <form action="">
-    <input id="name" autocomplete="off" placeholder="Enter your name..."/>
-    <input id="m" autocomplete="off" placeholder="Enter your message..."/>
-    <button>Send</button>
+    <div class="pull-left name-container">
+        <input id="name" autocomplete="off" placeholder="Enter your name..."/>
+    </div>
+    <div class="pull-right btn-container">
+        <button>Send</button>
+    </div>
+    <div class="msg-container">
+        <input id="m" autocomplete="off" placeholder="Enter your message..."/>
+    </div>
 </form>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>

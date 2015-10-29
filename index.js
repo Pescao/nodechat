@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
 
 app.get('/updateFromRepo', function (req, res) {
     console.log('updating from repo');
-    var pull = child_process.spawn('git pull');
+    var pull = child_process.spawn('git', ['pull']);
 
     pull.stdout.on('data', function (data) {
         console.log('pull stdout: ' + data);

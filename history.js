@@ -2,7 +2,7 @@ var History = function () {};
 var fs = require('fs');
 
 History.prototype.get = function () {
-	var promise = new Promise(function(resolve, reject) {
+	return new Promise(function(resolve, reject) {
 		var lastHistory = {messages: []};
 		fs.readFile('history.json', function (err, content) {
 			if (!err) {
@@ -14,7 +14,6 @@ History.prototype.get = function () {
 			resolve(lastHistory);
 		})
 	});
-	return promise;
 };
 
 History.prototype.save = function (msg) {

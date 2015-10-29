@@ -38,7 +38,9 @@ app.get('/updateFromRepo', function (req, res) {
     pull.stdout.on('data', function (data) {
         console.log('pull stdout: ' + data);
     });
-    child_process.exec('git pull');
+    pull.stderr.on('data', function (data) {
+        console.log('pull stderr: ' + data);
+    });
     res.send('updated');
 });
 

@@ -77,6 +77,7 @@ Application.prototype = {
                 history.messages.forEach(function (msg) {
                     self.addMessage(msg);
                 });
+                scrollToBottom();
             } catch (e) {
                 console.log(e)
             }
@@ -86,7 +87,6 @@ Application.prototype = {
 
 var app = new Application();
 app.initialize();
-scrollToBottom();
 
 function scrollToBottom() {
     $(window).scrollTop($('body').height());

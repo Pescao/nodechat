@@ -31,8 +31,9 @@ io.on('connection', function (socket) {
     });
 });
 
-app.get('/updateFromSVN', function (req, res) {
-    exec('svn up');
+app.get('/updateFromRepo', function (req, res) {
+    exec('git fetch');
+    exec('git pull');
     res.send('updated');
 });
 

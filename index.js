@@ -26,15 +26,15 @@ app.get('/getHistory', function (req, res) {
 app.get('/updateFromRepo', function (req, res) {
     console.log('updating from repo');
     var pull = child_process.spawn('git', ['pull']),
-        out = {stdout: [], stderr: []};
+        output = {stdout: [], stderr: []};
 
     pull.stdout.on('data', function (data) {
-        out.stdout.push(data);
+        output.stdout.push(data);
     });
     pull.stderr.on('data', function (data) {
-        out.stderr.push(data);
+        output.stderr.push(data);
     });
-    res.send(out);
+    res.send(JSON.stringify(output));
 });
 
 io.on('connection', function (socket) {

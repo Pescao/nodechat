@@ -26,6 +26,7 @@ Application.prototype = {
         self.setNickname();
         self.getHistory();
         self.bindEvents();
+        scrollToBottom();
     },
     bindEvents: function () {
         var self = this, $ui = self.$ui;
@@ -86,7 +87,6 @@ Application.prototype = {
 
 var app = new Application();
 app.initialize();
-scrollToBottom();
 
 function scrollToBottom() {
     $(window).scrollTop($('body').height());

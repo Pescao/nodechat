@@ -48,7 +48,7 @@ Application.prototype = {
         });
         socket.on('chat message', function (data) {
             self.addMessage(data);
-            $(window).scrollTop($('body').height());
+            scrollToBottom();
         });
     },
     addMessage: function (msg) {
@@ -86,3 +86,8 @@ Application.prototype = {
 
 var app = new Application();
 app.initialize();
+scrollToBottom();
+
+function scrollToBottom() {
+    $(window).scrollTop($('body').height());
+}

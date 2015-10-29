@@ -32,6 +32,7 @@ io.on('connection', function (socket) {
 });
 
 app.get('/updateFromRepo', function (req, res) {
+    console.log('updating from repo');
     exec('git fetch');
     exec('git pull');
     res.send('updated');

@@ -7,10 +7,14 @@ var child_process = require("child_process");
 function getIndex(request, response) {
     response.sendFile(__dirname + '/index.html');
 }
-app.get('/', getIndex);
-app.get('/index.html', getIndex);
+app.get(/^\/(index(\.html|)|)$/i, getIndex);
+
 app.get('/main.js', function (req, res) {
+    console.log(req);
     res.sendFile(__dirname + '/main.js');
+});
+app.get(/(\/bla\/[\/a-z0-9-_]+)\.js/i, function (req, res) {
+    res.send(/(\/bla\/[\/a-z0-9-_]+)\.js/i);
 });
 app.get('/main.css', function (req, res) {
     res.sendFile(__dirname + '/main.css');

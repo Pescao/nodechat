@@ -1,57 +1,11 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var MsgHistory = require('./history');
-var child_process = require("child_process");
-var pathRegExp = /([\/a-z0-9-_]+)(\.(?:js|css|mp3|html|json|txt))?/i;
-var fs = require('fs');
-
-function getIndex(request, response) {
-    response.sendFile(__dirname + '/index.html');
-}
-app.get(/^\/(index(\.html|)|)$/i, getIndex);
-app.get(pathRegExp, function (req, res) {
-    var url = pathRegExp.exec(req.url);
-    if (!url) return;
-
-    var path = url[1],
-        ext = url[2];
-    if (path && ext) {
-        var pathToFile = __dirname + path + '.' + ext;
-        fs.stat(pathToFile, function (err, stat) {
-            if (err) {
-                throw err;
-            } else if (stat) {
-                res.sendFile(pathToFile);
-            }
-        });
-    } else if (path) {
-        res.send(path);
-    }
-});
-app.get('/getHistory', function (req, res) {
-    MsgHistory.get().then(function (content) {
-        res.send(JSON.stringify(content));
-    });
-});
-app.get('/updateFromRepo', function (req, res) {
-    console.log('updating from repo');
-    var pull = child_process.spawn('git', ['pull']),
-        output = {stdout: [], stderr: []};
-
-    pull.stdout.on('data', function (data) {
-        console.log('pull stdout: ' + data);
-        output.stdout.push('pull stdout: ' + data);
-    });
-    pull.stderr.on('data', function (data) {
-        console.log('pull stderr: ' + data);
-        output.stderr.push('pull stderr: ' + data);
-    });
-    io.emit('code updated');
-    res.send(JSON.stringify(output));
-});
-
+var router = require('./router')(express.Router(), MsgHistory, io);
 var onlineCount = 0;
+
 io.on('connection', function (socket) {
     socket.on('chat message', function (msg) {
         MsgHistory.save(msg);
@@ -63,14 +17,7 @@ io.on('connection', function (socket) {
     io.emit('online changed', ++onlineCount, 'connect');
 });
 http.listen(9090, function () {
-    console.log('listening on *:3000');
+    console.log('listening on *:9090');
 });
 
-(function () {
-    var oldSpawn = child_process.spawn;
-    child_process.spawn = function mySpawn() {
-        //console.log('spawn called');
-        //console.log(arguments);
-        return oldSpawn.apply(this, arguments);
-    };
-})();
+app.use(router);

@@ -50,10 +50,10 @@ io.on('connection', function (socket) {
         MsgHistory.save(msg);
         io.emit('chat message', msg);
     });
-    io.emit('online changed', ++onlineCount);
+    io.emit('online changed', ++onlineCount, 'connect');
 });
 io.on('disconnection', function (socket) {
-    io.emit('online changed', --onlineCount);
+    io.emit('online changed', --onlineCount, 'disconnect');
 });
 http.listen(9090, function () {
     console.log('listening on *:3000');

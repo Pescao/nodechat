@@ -3,8 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var MsgHistory = require('./history');
 var child_process = require("child_process");
-var onlineCount = 0;
-var pathRegExp = /([\/a-z0-9-_]+)\.(js|css|mp3|html)/i;
+var pathRegExp = /([\/a-z0-9-_]+)(\.(?:js|css|mp3|html|json|txt))?/i;
 var fs = require('fs');
 
 function getIndex(request, response) {
@@ -52,6 +51,7 @@ app.get('/updateFromRepo', function (req, res) {
     res.send(JSON.stringify(output));
 });
 
+var onlineCount = 0;
 io.on('connection', function (socket) {
     socket.on('chat message', function (msg) {
         MsgHistory.save(msg);

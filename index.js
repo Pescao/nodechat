@@ -5,6 +5,7 @@ var MsgHistory = require('./history');
 var child_process = require("child_process");
 var onlineCount = 0;
 var pathRegExp = /([\/a-z0-9-_]+)\.(js|css|mp3|html)/i;
+var fs = require('fs');
 
 function getIndex(request, response) {
     response.sendFile(__dirname + '/index.html');

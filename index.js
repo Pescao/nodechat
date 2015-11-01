@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var MsgHistory = require('./history');
 var child_process = require("child_process");
+var onlineCount = 0;
 
 function getIndex(request, response) {
     response.sendFile(__dirname + '/index.html');
@@ -49,6 +50,10 @@ io.on('connection', function (socket) {
         MsgHistory.save(msg);
         io.emit('chat message', msg);
     });
+    io.emit('online changed', ++onlineCount);
+});
+io.on('disconnection', function (socket) {
+    io.emit('online changed', --onlineCount);
 });
 http.listen(9090, function () {
     console.log('listening on *:3000');

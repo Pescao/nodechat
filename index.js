@@ -15,7 +15,11 @@ app.get('/main.js', function (req, res) {
     res.sendFile(__dirname + '/main.js');
 });
 app.get(/(\/bla\/[\/a-z0-9-_]+)\.js/i, function (req, res) {
-    res.send(JSON.stringify(req));
+    var result = {
+        url: req.url,
+        regexp: /(\/bla\/[\/a-z0-9-_]+)\.js/i.exec(req.url)
+    };
+    res.send(JSON.stringify(result));
 });
 app.get('/main.css', function (req, res) {
     res.sendFile(__dirname + '/main.css');

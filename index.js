@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
     });
     io.emit('online changed', ++onlineCount, 'connect');
 });
-io.on('disconnection', function (socket) {
+io.on('disconnect', function (socket) {
     io.emit('online changed', --onlineCount, 'disconnect');
 });
 http.listen(9090, function () {

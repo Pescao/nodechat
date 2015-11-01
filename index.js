@@ -4,28 +4,30 @@ var io = require('socket.io')(http);
 var MsgHistory = require('./history');
 var child_process = require("child_process");
 var onlineCount = 0;
+var pathRegExp = /([\/a-z0-9-_]+)\.(js|css|mp3|html)/i;
 
 function getIndex(request, response) {
     response.sendFile(__dirname + '/index.html');
 }
 app.get(/^\/(index(\.html|)|)$/i, getIndex);
+app.get(pathRegExp, function (req, res) {
+    var url = pathRegExp.exec(req.url);
+    if (!url) return;
 
-app.get('/main.js', function (req, res) {
-    console.log(req);
-    res.sendFile(__dirname + '/main.js');
-});
-app.get(/(\/bla\/[\/a-z0-9-_]+)\.js/i, function (req, res) {
-    var result = {
-        url: req.url,
-        regexp: /(\/bla\/[\/a-z0-9-_]+)\.js/i.exec(req.url)
-    };
-    res.send(JSON.stringify(result));
-});
-app.get('/main.css', function (req, res) {
-    res.sendFile(__dirname + '/main.css');
-});
-app.get('/assets/audio/notification.mp3', function (req, res) {
-    res.sendFile(__dirname + '/assets/audio/notification.mp3');
+    var path = url[1],
+        ext = url[2];
+    if (path && ext) {
+        var pathToFile = __dirname + path + '.' + ext;
+        fs.stat(pathToFile, function (err, stat) {
+            if (err) {
+                throw err;
+            } else if (stat) {
+                res.sendFile(pathToFile);
+            }
+        });
+    } else if (path) {
+        res.send(path);
+    }
 });
 app.get('/getHistory', function (req, res) {
     MsgHistory.get().then(function (content) {

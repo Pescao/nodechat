@@ -5,12 +5,8 @@ Application.prototype = {
     ui: {
         messages: "#messages",
         name    : "#name",
-        msg     : "#m"
-    },
-    $ui: {
-        messages: $("#messages"),
-        name    : $("#name"),
-        msg     : $("#m")
+        msg     : "#m",
+        online  : "#online"
     },
     notificationSound: new Audio('./assets/audio/notification.mp3'),
     calls: {
@@ -21,29 +17,41 @@ Application.prototype = {
             });
         }
     },
+
     initialize: function () {
         var self = this;
 
+        self.setUI();
         self.setNickname();
         self.getHistory();
         self.bindEvents();
     },
+
+    setUI: function () {
+        var self = this, ui = self.ui;
+        self.$ui = {};
+        $.each(ui, function (key, val) {
+            self.$ui[key] = $(val);
+        });
+    },
+
     bindEvents: function () {
         var self = this, $ui = self.$ui;
-        $('form').submit(function () {
-            var msg = $ui.msg.val(),
-                name = $ui.name.val();
-            if (msg) {
+        $('form').submit(function (e) {
+            var text = $ui.msg.val(),
+                name = $ui.name.val(),
+                msg;
+            if (text) {
                 msg = {
                     name: name || 'Anonymous',
-                    text: msg
+                    text: text
                 };
                 socket.emit('chat message', msg);
                 $ui.msg.val('');
             }
             if (name) {
                 localStorage.setItem('Nickname', name);
-                $ui.name.attr('disabled', '');
+                self.setNickname();
             }
             return false;
         });
@@ -52,10 +60,7 @@ Application.prototype = {
             scrollToBottom();
             $(document).trigger("chat.message");
         });
-
-        socket.on('online changed', function () {
-            console.log(arguments);
-        });
+        socket.on('online changed', self.onOnlineChanged.bind(self));
 
         $(window).blur(function (e) {
             $(document).on("chat.message", self.onNewMessage.bind(self));
@@ -66,20 +71,27 @@ Application.prototype = {
             });
         });
     },
+
     addMessage: function (msg) {
-        var self = this, $ui = self.$ui,
-            time = new Date();
-        if (msg.time) {
-            time = new Date(msg.time);
-        }
-        $ui.messages.append($('<li>').text('[' + time.toLocaleString() + '] ' + msg.name + ': ' + msg.text));
+        msg.time = msg.time ? new Date(msg.time) : new Date();
+        this.$ui.messages.append($('<li>').text('[' + msg.time.toLocaleString() + '] ' + msg.name + ': ' + msg.text));
     },
-    onNewMessage     : function () {
+
+    onNewMessage: function () {
         var self = this;
         $('title').text('Чятик (новое сообщение)');
         self.notificationSound.play();
-
     },
+
+    onOnlineChanged: function (onlineCount, eventType) {
+        var self = this;
+        self.$ui.online.text(onlineCount);
+        if (eventType == 'disconnect') {
+            self.$ui.online.parent().addClass('disconnect');
+            setTimeout(function () {self.$ui.online.parent().removeClass('disconnect')}, 2000);
+        }
+    },
+
     setNickname: function () {
         var self = this, $ui = self.$ui,
             nick = localStorage.getItem('Nickname');
@@ -89,6 +101,7 @@ Application.prototype = {
             $ui.name.focus();
         }
     },
+
     getHistory: function () {
         var self = this;
         $.when(self.calls.getHistory()).then(function (result) {

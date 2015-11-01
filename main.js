@@ -53,9 +53,8 @@ Application.prototype = {
             $(document).trigger("chat.message");
         });
 
-        socket.on('code updated', function () {
-            // not sure that we need it
-            //location.reload();
+        socket.on('online changed', function () {
+            console.log(arguments);
         });
 
         $(window).blur(function (e) {
